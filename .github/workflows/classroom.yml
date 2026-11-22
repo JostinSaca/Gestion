@@ -1,0 +1,109 @@
+name: Autograding por metodos
+
+on:
+  push:
+  repository_dispatch:
+
+permissions:
+  checks: write
+  contents: read
+  actions: read
+
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - name: Metodo 1 - agregarPelicula
+        id: agregar-pelicula
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Metodo 1 - agregarPelicula
+          setup-command: ""
+          command: mvn -q -Dtest=AgregarPeliculaTest test
+          timeout: 10
+          max-score: 1
+
+      - name: Metodo 2 - buscarPorTituloSecuencial
+        id: buscar-titulo-secuencial
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Metodo 2 - buscarPorTituloSecuencial
+          setup-command: ""
+          command: mvn -q -Dtest=BuscarPorTituloSecuencialTest test
+          timeout: 10
+          max-score: 1
+
+      - name: Metodo 3 - ordenarPorCalificacionDescendente
+        id: ordenar-calificacion-descendente
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Metodo 3 - ordenarPorCalificacionDescendente
+          setup-command: ""
+          command: mvn -q -Dtest=OrdenarPorCalificacionDescendenteTest test
+          timeout: 10
+          max-score: 1
+
+      - name: Metodo 4 - buscarPorCodigoBinario
+        id: buscar-codigo-binario
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Metodo 4 - buscarPorCodigoBinario
+          setup-command: ""
+          command: mvn -q -Dtest=BuscarPorCodigoBinarioTest test
+          timeout: 10
+          max-score: 1
+
+      - name: Metodo 5 - buscarMejorCalificadaRecursivo
+        id: buscar-mejor-calificada-recursivo
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Metodo 5 - buscarMejorCalificadaRecursivo
+          setup-command: ""
+          command: mvn -q -Dtest=BuscarMejorCalificadaRecursivoTest test
+          timeout: 10
+          max-score: 0.75
+
+      - name: Metodo 6 - contarPorGeneroRecursivo
+        id: contar-por-genero-recursivo
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Metodo 6 - contarPorGeneroRecursivo
+          setup-command: ""
+          command: mvn -q -Dtest=ContarPorGeneroRecursivoTest test
+          timeout: 10
+          max-score: 0.75
+
+      - name: Metodo 7 - sumaCalificacionesPorGeneroRecursiva
+        id: suma-calificaciones-genero-recursiva
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Metodo 7 - sumaCalificacionesPorGeneroRecursiva
+          setup-command: ""
+          command: mvn -q -Dtest=SumaCalificacionesPorGeneroRecursivaTest test
+          timeout: 10
+          max-score: 0.5
+
+      - name: Autograding Reporter
+        uses: classroom-resources/autograding-grading-reporter@v1
+        env:
+          AGREGAR-PELICULA_RESULTS: "${{steps.agregar-pelicula.outputs.result}}"
+          BUSCAR-TITULO-SECUENCIAL_RESULTS: "${{steps.buscar-titulo-secuencial.outputs.result}}"
+          ORDENAR-CALIFICACION-DESCENDENTE_RESULTS: "${{steps.ordenar-calificacion-descendente.outputs.result}}"
+          BUSCAR-CODIGO-BINARIO_RESULTS: "${{steps.buscar-codigo-binario.outputs.result}}"
+          BUSCAR-MEJOR-CALIFICADA-RECURSIVO_RESULTS: "${{steps.buscar-mejor-calificada-recursivo.outputs.result}}"
+          CONTAR-POR-GENERO-RECURSIVO_RESULTS: "${{steps.contar-por-genero-recursivo.outputs.result}}"
+          SUMA-CALIFICACIONES-GENERO-RECURSIVA_RESULTS: "${{steps.suma-calificaciones-genero-recursiva.outputs.result}}"
+        with:
+          runners: agregar-pelicula,buscar-titulo-secuencial,ordenar-calificacion-descendente,buscar-codigo-binario,buscar-mejor-calificada-recursivo,contar-por-genero-recursivo,suma-calificaciones-genero-recursiva
